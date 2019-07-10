@@ -60,6 +60,11 @@
 		"xtr1common": "cpp",
 		"xtree": "cpp",
 		"xutility": "cpp",
-		"fstream": "cpp"
+		"fstream": "cpp",
+		"deque": "cpp",
+		"atomic": "cpp",
+		"resumable": "cpp",
+		"future": "cpp",
+		"sstream": "cpp"
 	}
 }

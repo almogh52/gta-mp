@@ -373,6 +373,11 @@ DWORD gtamp::pe_loader::get_protection(bool executable, bool writeable, bool rea
 	return protect;
 }
 
+void *gtamp::pe_loader::get_image_base()
+{
+	return (void *)_nt_headers->OptionalHeader.ImageBase;
+}
+
 std::function<void()> gtamp::pe_loader::get_entry()
 {
 	return _entry;

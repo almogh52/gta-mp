@@ -17,6 +17,7 @@ public:
 
 	void load_exe(std::string exe_path);
 
+	void *get_image_base();
 	std::function<void()> get_entry();
 
 private:
