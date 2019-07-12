@@ -14,6 +14,7 @@ class pattern
 public:
 	pattern(std::string pattern);
 
+	uintptr_t get();
 	std::vector<uintptr_t> get_matches();
 
 private:

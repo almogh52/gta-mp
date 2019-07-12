@@ -3,12 +3,23 @@
 #include <intrin.h>
 
 #include "hook_manager.h"
+#include "../exception.h"
 
 gtamp::hook::pattern::pattern(std::string pattern)
 {
+	// Create tha value and the mask from the pattern and search for it
 	create_value(pattern);
 	create_mask(pattern);
 	search();
+}
+
+uintptr_t gtamp::hook::pattern::get()
+{
+	if (_matches.size() == 0) {
+		throw exception(NO_PATTERN_MATCHES, "No matches were found for the given pattern.");
+	}
+
+	return _matches[0];
 }
 
 std::vector<uintptr_t> gtamp::hook::pattern::get_matches()
@@ -127,7 +138,7 @@ void gtamp::hook::pattern::create_value(std::string pattern)
 	}
 
 	// Set the size of the pattern
-	_size = _value.size();
+	_size = (uint8_t)_value.size();
 
 	// Pad value if needed
 	if (_value.size() % 32 != 0)
