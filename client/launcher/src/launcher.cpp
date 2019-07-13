@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <thread>
 
+#include <client.h>
+
 #include "patches.h"
 #include "../../shared/hook/manager.h"
 
@@ -31,6 +33,8 @@ void gtamp::launcher::launcher::run()
 	std::string gta_dir = "D:\\Other\\Steam\\steamapps\\common\\Grand Theft Auto V";
 	std::function<void()> entry;
 	std::thread gta_initial_thread;
+
+	client client;
 
 	// Apply pre load patches to allow debugging
 	gtamp::launcher::patches::apply_pre_load_patches();

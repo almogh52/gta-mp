@@ -17,6 +17,10 @@ file(GLOB_RECURSE SHARED_SOURCES "../shared/*.cpp" "../shared/*.h")
 set(CMAKE_CXX_FLAGS_RELEASE "/MT")
 set(CMAKE_CXX_FLAGS_DEBUG "/MT")
 
+# Compile the core library
+add_subdirectory(../core GTAMPCore)
+include_directories(../core/include)
+
 # Compile the subhook library
 set(SUBHOOK_STATIC OFF)
 set(SUBHOOK_INSTALL OFF)
@@ -36,7 +40,12 @@ add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
 add_executable(GTAMPLauncher WIN32 ${SOURCES} ${SHARED_SOURCES})
 
 # Link the launcher to the dependencies' libs
-target_link_libraries(GTAMPLauncher subhook libcef_dll_wrapper ${CEF_LIB})
+target_link_libraries(GTAMPLauncher GTAMPCore subhook libcef_dll_wrapper ${CEF_LIB})
+
+# Copy GTAMPCore DLL to launcher dir
+add_custom_command(TARGET GTAMPLauncher POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:GTAMPCore> $<TARGET_FILE_DIR:GTAMPLauncher>
+)
 
 # Copy subhook DLL to launcher dir
 add_custom_command(TARGET GTAMPLauncher POST_BUILD
