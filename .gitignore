@@ -5,6 +5,9 @@
 # Ignore build folders
 build
 
+# Ignore cef binary folder
+cef
+
 ### C++ ###
 # Prerequisites
 *.d
