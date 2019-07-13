@@ -2,14 +2,15 @@
 
 #include <string>
 #include <vector>
-
 #include <intrin.h>
+
+#include "address.h"
 
 namespace gtamp
 {
 namespace hook
 {
-class pattern
+class pattern : public address
 {
 public:
 	pattern(std::string pattern);

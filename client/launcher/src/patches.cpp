@@ -68,7 +68,7 @@ void gtamp::launcher::patches::apply_pre_load_patches()
 void gtamp::launcher::patches::apply_post_load_patches()
 {
 	// Get the address of the launcher check
-	uint8_t *launcher_check = (uint8_t *)gtamp::hook::pattern("E8 ? ? ? ? 84 C0 75 ? B2 01 B9 2F A9 C2 F4").get();
+	uint8_t *launcher_check = gtamp::hook::pattern("E8 ? ? ? ? 84 C0 75 ? B2 01 B9 2F A9 C2 F4");
 
 	// Remove the check of the launcher
 	gtamp::hook::modify::put<uint8_t>(launcher_check + 7, 0xEB);

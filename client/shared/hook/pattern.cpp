@@ -11,11 +11,15 @@ gtamp::hook::pattern::pattern(std::string pattern)
 	create_value(pattern);
 	create_mask(pattern);
 	search();
+
+	// Set the address if found a match
+	_matches.size() > 0 ? _addr = _matches[0] : NULL;
 }
 
 uintptr_t gtamp::hook::pattern::get()
 {
-	if (_matches.size() == 0) {
+	if (_matches.size() == 0)
+	{
 		throw exception(NO_PATTERN_MATCHES, "No matches were found for the given pattern.");
 	}
 
@@ -171,7 +175,7 @@ void gtamp::hook::pattern::create_mask(std::string pattern)
 	}
 }
 
-void gtamp::hook::pattern::pad(std::vector<uint8_t>& value, uint16_t amount)
+void gtamp::hook::pattern::pad(std::vector<uint8_t> &value, uint16_t amount)
 {
 	for (int i = 0; i < amount; i++)
 	{
