@@ -2,7 +2,7 @@
 
 #include <intrin.h>
 
-#include "hook_manager.h"
+#include "manager.h"
 #include "../exception.h"
 
 gtamp::hook::pattern::pattern(std::string pattern)
@@ -12,17 +12,18 @@ gtamp::hook::pattern::pattern(std::string pattern)
 	create_mask(pattern);
 	search();
 
-	// Set the address if found a match
-	_matches.size() > 0 ? _addr = _matches[0] : NULL;
-}
-
-uintptr_t gtamp::hook::pattern::get()
-{
+	// If no matches found, throw error
 	if (_matches.size() == 0)
 	{
 		throw exception(NO_PATTERN_MATCHES, "No matches were found for the given pattern.");
 	}
 
+	// Set the address if found a match
+	_addr = _matches[0];
+}
+
+uintptr_t gtamp::hook::pattern::get()
+{
 	return _matches[0];
 }
 
@@ -38,7 +39,7 @@ void gtamp::hook::pattern::search()
 	__m256i avx_value, avx_mask;
 	__m128i sse_value, sse_mask;
 
-	std::vector<section> sections = hook_manager::get_sections();
+	std::vector<section> sections = manager::get_sections();
 
 	// 256-bit
 	if (_size <= 32 && is_avx_supported())

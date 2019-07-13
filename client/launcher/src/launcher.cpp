@@ -4,7 +4,7 @@
 #include <thread>
 
 #include "patches.h"
-#include "../../shared/hook/hook_manager.h"
+#include "../../shared/hook/manager.h"
 
 LPCSTR __stdcall hook_GetCommandlineA()
 {
@@ -52,7 +52,7 @@ void gtamp::launcher::launcher::run()
 	entry = _loader.get_entry();
 
 	// Set the image base for the hook manager
-	gtamp::hook::hook_manager::set_exe_memory(_loader.get_image_base());
+	gtamp::hook::manager::set_exe_memory(_loader.get_image_base());
 
 	// Create the initial thread for the GTA with it's entry and join it
 	gta_initial_thread = std::thread(entry);
