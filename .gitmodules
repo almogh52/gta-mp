@@ -1,3 +1,6 @@
 [submodule "client/vendor/subhook"]
 	path = client/vendor/subhook
 	url = https://github.com/Zeex/subhook
+[submodule "client/vendor/discord-rpc"]
+	path = client/vendor/discord-rpc
+	url = https://github.com/discordapp/discord-rpc

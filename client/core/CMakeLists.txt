@@ -16,12 +16,32 @@ file(GLOB SOURCES "src/*.cpp" "src/*.h" "include/*.h")
 # Get all header files from the shared
 file(GLOB_RECURSE SHARED_SOURCES "../shared/*.h")
 
-# Include headers for subhook
+# Change runtime library to MT
+set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+set(CMAKE_CXX_FLAGS_DEBUG "/MT")
+
+# Compile the subhook library
+set(SUBHOOK_STATIC OFF)
+set(SUBHOOK_INSTALL OFF)
+set(SUBHOOK_TESTS OFF)
+add_subdirectory(../vendor/subhook subhook)
 include_directories(../vendor/subhook)
 
-# Include headers for CEF
+# Compile the discord-rpc library
+set(BUILD_EXAMPLES OFF)
+set(USE_STATIC_CRT ON)
+add_subdirectory(../vendor/discord-rpc discord-rpc)
+include_directories(../vendor/discord-rpc/include)
+
+# Bundle the CEF as well
 get_filename_component(CEF_ROOT "../vendor/cef" ABSOLUTE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")
 include_directories(${CEF_ROOT})
+find_package(CEF REQUIRED)
+add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
 
 # Add the launcher as an executable to be compiled
 add_library(GTAMPCore SHARED ${SOURCES} ${SHARED_SOURCES})
+
+# Link the core library to the dependencies' libs
+target_link_libraries(GTAMPCore subhook discord-rpc libcef_dll_wrapper)

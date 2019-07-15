@@ -21,26 +21,18 @@ set(CMAKE_CXX_FLAGS_DEBUG "/MT")
 add_subdirectory(../core GTAMPCore)
 include_directories(../core/include)
 
-# Compile the subhook library
-set(SUBHOOK_STATIC OFF)
-set(SUBHOOK_INSTALL OFF)
-set(SUBHOOK_TESTS OFF)
-add_subdirectory(../vendor/subhook subhook)
+# Include the subhook library
 include_directories(../vendor/subhook)
 
-# Bundle the CEF as well
+# Get the CEF root
 get_filename_component(CEF_ROOT "../vendor/cef" ABSOLUTE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")
-set(CEF_LIB "${CEF_ROOT}/Release/libcef.lib")
-include_directories(${CEF_ROOT})
-find_package(CEF REQUIRED)
-add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
 
 # Add the launcher as an executable to be compiled
 add_executable(GTAMPLauncher WIN32 ${SOURCES} ${SHARED_SOURCES})
 
 # Link the launcher to the dependencies' libs
-target_link_libraries(GTAMPLauncher GTAMPCore subhook libcef_dll_wrapper ${CEF_LIB})
+target_link_libraries(GTAMPLauncher GTAMPCore)
 
 # Copy GTAMPCore DLL to launcher dir
 add_custom_command(TARGET GTAMPLauncher POST_BUILD
