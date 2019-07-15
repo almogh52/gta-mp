@@ -11,6 +11,11 @@ namespace gtamp
 class CORE_EXPORT client
 {
 public:
-	client();
+	void run();
+
+private:
+	inline static const char *DISCORD_APP_ID = "600342853511544843";
+
+	void init_discord_rpc();
 };
 }; // namespace gtamp

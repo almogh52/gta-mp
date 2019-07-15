@@ -60,5 +60,8 @@ void gtamp::launcher::launcher::run()
 
 	// Create the initial thread for the GTA with it's entry and join it
 	gta_initial_thread = std::thread(entry);
-	gta_initial_thread.join();
+	gta_initial_thread.detach();
+
+	// Run the client core
+	client.run();
 }

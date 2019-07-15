@@ -66,5 +66,6 @@
 		"resumable": "cpp",
 		"future": "cpp",
 		"sstream": "cpp"
-	}
+	},
+	"discord.enabled": false
 }
