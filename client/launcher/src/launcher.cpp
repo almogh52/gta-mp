@@ -25,6 +25,11 @@ BOOL __stdcall hook_ShowWindow(HWND hWnd, int nCmdShow)
 	return ShowWindow(hWnd, nCmdShow);
 }
 
+void __stdcall hook_OutputDebugString(const char *str)
+{
+	spdlog::get("Launcher")->info("GTA V Debug: {}", str);
+}
+
 FARPROC proc_handler(HMODULE module, const char *name)
 {
 	spdlog::get("Launcher")->info("GetProcAddress: Name - {}", name);
@@ -35,6 +40,9 @@ FARPROC proc_handler(HMODULE module, const char *name)
 	} else if (!strcmp(name, "ShowWindow"))
 	{
 		return (FARPROC)hook_ShowWindow;
+	} else if (!strcmp(name, "OutputDebugStringA") || !strcmp(name, "OutputDebugStringW"))
+	{
+		return (FARPROC)hook_OutputDebugString;
 	}
 
 	return (FARPROC)GetProcAddress(module, name);
