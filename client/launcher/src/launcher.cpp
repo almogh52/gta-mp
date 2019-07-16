@@ -17,6 +17,14 @@ LPCSTR __stdcall hook_GetCommandlineA()
 	return GetCommandLineA();
 }
 
+BOOL __stdcall hook_ShowWindow(HWND hWnd, int nCmdShow)
+{
+	// Set name of the window
+	SetWindowTextA(hWnd, "GTA:Multiplayer");
+
+	return ShowWindow(hWnd, nCmdShow);
+}
+
 FARPROC proc_handler(HMODULE module, const char *name)
 {
 	spdlog::get("Launcher")->info("GetProcAddress: Name - {}", name);
@@ -24,6 +32,9 @@ FARPROC proc_handler(HMODULE module, const char *name)
 	if (!strcmp(name, "GetCommandLineA"))
 	{
 		return (FARPROC)hook_GetCommandlineA;
+	} else if (!strcmp(name, "ShowWindow"))
+	{
+		return (FARPROC)hook_ShowWindow;
 	}
 
 	return (FARPROC)GetProcAddress(module, name);
