@@ -37,6 +37,11 @@ add_executable(GTAMPLauncher WIN32 ${SOURCES} ${SHARED_SOURCES})
 # Link the launcher to the dependencies' libs
 target_link_libraries(GTAMPLauncher GTAMPCore)
 
+# Copy resources to launcher dir
+add_custom_command(TARGET GTAMPLauncher POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "../../resources" "$<TARGET_FILE_DIR:GTAMPLauncher>/resources"
+)
+
 # Copy GTAMPCore DLL to launcher dir
 add_custom_command(TARGET GTAMPLauncher POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:GTAMPCore> $<TARGET_FILE_DIR:GTAMPLauncher>

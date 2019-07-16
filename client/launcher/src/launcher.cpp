@@ -5,6 +5,7 @@
 
 #include <client.h>
 
+#include "splash_screen.h"
 #include "patches.h"
 #include "../../shared/hook/manager.h"
 
@@ -13,6 +14,9 @@ LPCSTR __stdcall hook_GetCommandlineA()
 	// Apply post load patches to the binary
 	spdlog::get("Launcher")->info("Applying Post-Load patches..");
 	gtamp::launcher::patches::apply_post_load_patches();
+
+	// Close the splash screen
+	gtamp::launcher::splash_screen::close();
 
 	return GetCommandLineA();
 }
@@ -59,6 +63,9 @@ void gtamp::launcher::launcher::run()
 
 	client client;
 
+	splash_screen::show();
+
+	// Flush log every second to file
 	spdlog::flush_every(std::chrono::seconds(1));
 
 	// Apply pre load patches to allow debugging
