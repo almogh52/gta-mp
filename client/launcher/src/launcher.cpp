@@ -11,6 +11,7 @@
 LPCSTR __stdcall hook_GetCommandlineA()
 {
 	// Apply post load patches to the binary
+	spdlog::get("Launcher")->info("Applying Post-Load patches..");
 	gtamp::launcher::patches::apply_post_load_patches();
 
 	return GetCommandLineA();
@@ -18,6 +19,8 @@ LPCSTR __stdcall hook_GetCommandlineA()
 
 FARPROC proc_handler(HMODULE module, const char *name)
 {
+	spdlog::get("Launcher")->info("GetProcAddress: Name - {}", name);
+
 	if (!strcmp(name, "GetCommandLineA"))
 	{
 		return (FARPROC)hook_GetCommandlineA;
@@ -26,7 +29,8 @@ FARPROC proc_handler(HMODULE module, const char *name)
 	return (FARPROC)GetProcAddress(module, name);
 }
 
-gtamp::launcher::launcher::launcher() : _loader(proc_handler) {}
+gtamp::launcher::launcher::launcher()
+	: _logger(create_logger("Launcher")), _loader(proc_handler) {}
 
 void gtamp::launcher::launcher::run()
 {
@@ -36,7 +40,10 @@ void gtamp::launcher::launcher::run()
 
 	client client;
 
+	spdlog::flush_every(std::chrono::seconds(1));
+
 	// Apply pre load patches to allow debugging
+	_logger->info("Applying Pre-Load patches..");
 	gtamp::launcher::patches::apply_pre_load_patches();
 
 	// Set the current directory to the gta dir to load libraries from there
@@ -45,6 +52,7 @@ void gtamp::launcher::launcher::run()
 	try
 	{
 		// Load the binary of GTA
+		_logger->info("Loading GTA binary file..");
 		_loader.load_exe(gta_dir + "\\GTA5.exe");
 	}
 	catch (std::exception &ex)
@@ -59,6 +67,7 @@ void gtamp::launcher::launcher::run()
 	gtamp::hook::manager::set_exe_memory(_loader.get_image_base());
 
 	// Create the initial thread for the GTA with it's entry and join it
+	_logger->info("Starting GTA's initial thread..");
 	gta_initial_thread = std::thread(entry);
 	gta_initial_thread.detach();
 

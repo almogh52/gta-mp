@@ -33,6 +33,10 @@ set(USE_STATIC_CRT ON)
 add_subdirectory(../vendor/discord-rpc discord-rpc)
 include_directories(../vendor/discord-rpc/include)
 
+# Compile the spdlog library
+add_subdirectory(../../vendor/spdlog spdlog)
+include_directories(../../vendor/spdlog/include)
+
 # Bundle the CEF as well
 get_filename_component(CEF_ROOT "../vendor/cef" ABSOLUTE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")
@@ -44,4 +48,4 @@ add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
 add_library(GTAMPCore SHARED ${SOURCES} ${SHARED_SOURCES})
 
 # Link the core library to the dependencies' libs
-target_link_libraries(GTAMPCore subhook discord-rpc libcef_dll_wrapper)
+target_link_libraries(GTAMPCore subhook discord-rpc libcef_dll_wrapper spdlog)

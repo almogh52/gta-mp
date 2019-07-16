@@ -65,7 +65,14 @@
 		"atomic": "cpp",
 		"resumable": "cpp",
 		"future": "cpp",
-		"sstream": "cpp"
-	},
-	"discord.enabled": false
+		"sstream": "cpp",
+		"cctype": "cpp",
+		"cstdarg": "cpp",
+		"queue": "cpp",
+		"regex": "cpp",
+		"set": "cpp",
+		"stack": "cpp",
+		"string_view": "cpp",
+		"unordered_set": "cpp"
+	}
 }

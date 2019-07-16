@@ -24,6 +24,9 @@ include_directories(../core/include)
 # Include the subhook library
 include_directories(../vendor/subhook)
 
+# Include the spdlog library
+include_directories(../../vendor/spdlog/include)
+
 # Get the CEF root
 get_filename_component(CEF_ROOT "../vendor/cef" ABSOLUTE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")

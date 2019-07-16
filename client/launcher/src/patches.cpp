@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <winternl.h>
 
+#include "../../shared/logger.h"
 #include "../../shared/hook/pattern.h"
 #include "../../shared/hook/modify.h"
 #include "../../shared/hook/manager.h"
@@ -49,9 +50,11 @@ void gtamp::launcher::patches::apply_pre_load_patches()
 	void *raise_user_exception = GetProcAddress(GetModuleHandle(TEXT("ntdll.dll")), "KiRaiseUserExceptionDispatcher");
 
 	// Install the hook for the NtQueryInformationProcess WinAPI call to allow for debugging
+	spdlog::get("Launcher")->info("Patching NtQueryInformationProcess..");
 	hook::manager::install_hook("NtQueryInformationProcess", nt_query_information_process, NtQueryInformationProcessHook);
 
 	// Get the PEB and patch it to set being debugged to false
+	spdlog::get("Launcher")->info("Patching BeingDebugged in PEB..");
 	PPEB peb = (PPEB)__readgsqword(0x60);
 	peb->BeingDebugged = false;
 
@@ -60,11 +63,14 @@ void gtamp::launcher::patches::apply_pre_load_patches()
 	VirtualProtect(raise_user_exception, 5, PAGE_EXECUTE_READWRITE, &oldProtect);
 
 	// Disable the raise excpetion function
+	spdlog::get("Launcher")->info("Patching KiRaiseUserExceptionDispatcher..");
 	hook::modify::ret(raise_user_exception);
 }
 
 void gtamp::launcher::patches::apply_post_load_patches()
 {
+	spdlog::get("Launcher")->info("Patching launcher check..");
+
 	// Get the address of the launcher check
 	uint8_t *launcher_check = hook::pattern("E8 ? ? ? ? 84 C0 75 ? B2 01 B9 2F A9 C2 F4");
 

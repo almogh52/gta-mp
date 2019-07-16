@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pe_loader.h"
+#include "../../shared/logger.h"
 
 namespace gtamp
 {
@@ -14,6 +15,8 @@ public:
 	void run();
 
 private:
+	std::shared_ptr<spdlog::logger> _logger;
+
 	pe_loader _loader;
 };
 }; // namespace launcher
