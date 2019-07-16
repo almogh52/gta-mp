@@ -8,7 +8,7 @@ add_definitions (-DDEBUG)
 set (CMAKE_CXX_STANDARD 17)
 
 # Get all the cpp and h files for the launcher
-file(GLOB SOURCES "src/*.cpp" "src/*.h")
+file(GLOB SOURCES "src/*.cpp" "src/*.h" "src/*.rc" "src/*.ico")
 
 # Get all the cpp and h files from the shared
 file(GLOB_RECURSE SHARED_SOURCES "../shared/*.cpp" "../shared/*.h")
@@ -33,6 +33,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")
 
 # Add the launcher as an executable to be compiled
 add_executable(GTAMPLauncher WIN32 ${SOURCES} ${SHARED_SOURCES})
+
+set_source_files_properties(icon.ico PROPERTIES LANGUAGE RC)
 
 # Link the launcher to the dependencies' libs
 target_link_libraries(GTAMPLauncher GTAMPCore)
