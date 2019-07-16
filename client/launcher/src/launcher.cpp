@@ -11,9 +11,11 @@
 
 LPCSTR __stdcall hook_GetCommandlineA()
 {
+	gtamp::launcher::splash_screen::set_progress(90);
 	// Apply post load patches to the binary
 	spdlog::get("Launcher")->info("Applying Post-Load patches..");
 	gtamp::launcher::patches::apply_post_load_patches();
+	gtamp::launcher::splash_screen::set_progress(100);
 
 	// Close the splash screen
 	gtamp::launcher::splash_screen::close();
@@ -63,6 +65,7 @@ void gtamp::launcher::launcher::run()
 
 	client client;
 
+	// Show the splash screen
 	splash_screen::show();
 
 	// Flush log every second to file
@@ -71,6 +74,7 @@ void gtamp::launcher::launcher::run()
 	// Apply pre load patches to allow debugging
 	_logger->info("Applying Pre-Load patches..");
 	gtamp::launcher::patches::apply_pre_load_patches();
+	splash_screen::set_progress(15);
 
 	// Set the current directory to the gta dir to load libraries from there
 	SetCurrentDirectoryA(gta_dir.c_str());
@@ -80,6 +84,7 @@ void gtamp::launcher::launcher::run()
 		// Load the binary of GTA
 		_logger->info("Loading GTA binary file..");
 		_loader.load_exe(gta_dir + "\\GTA5.exe");
+		splash_screen::set_progress(40);
 	}
 	catch (std::exception &ex)
 	{
@@ -96,6 +101,7 @@ void gtamp::launcher::launcher::run()
 	_logger->info("Starting GTA's initial thread..");
 	gta_initial_thread = std::thread(entry);
 	gta_initial_thread.detach();
+	splash_screen::set_progress(50);
 
 	// Run the client core
 	client.run();
