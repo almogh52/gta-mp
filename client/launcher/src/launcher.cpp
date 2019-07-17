@@ -33,7 +33,7 @@ BOOL __stdcall hook_ShowWindow(HWND hWnd, int nCmdShow)
 
 void __stdcall hook_OutputDebugString(const char *str)
 {
-	spdlog::get("Launcher")->info("GTA V Debug: {}", str);
+	spdlog::get("GTA V")->info("GTA V Debug: {}", str);
 }
 
 FARPROC proc_handler(HMODULE module, const char *name)
@@ -96,6 +96,9 @@ void gtamp::launcher::launcher::run()
 
 	// Set the image base for the hook manager
 	gtamp::hook::manager::set_exe_memory(_loader.get_image_base());
+
+	// Create logger for the GTA
+	create_logger("GTA V");
 
 	// Create the initial thread for the GTA with it's entry and join it
 	_logger->info("Starting GTA's initial thread..");

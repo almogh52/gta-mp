@@ -27,6 +27,7 @@ void gtamp::client::init_discord_rpc()
 	Discord_Initialize(DISCORD_APP_ID, &handlers, 1, NULL);
 
 	discord_presence.state = "Developing";
+	discord_presence.largeImageKey = "large";
 
 	Discord_UpdatePresence(&discord_presence);
 }
