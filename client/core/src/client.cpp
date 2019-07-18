@@ -1,18 +1,35 @@
 #include "../include/client.h"
 
 #include <discord_rpc.h>
-#include <subhook.h>
 
-subhook::Hook h;
+#include "graphics/graphic_manager.h"
 
-void gtamp::client::run()
+void gtamp::client::client::init()
 {
-	init_discord_rpc();
+	// Init client logger
+	log_manager::create_logger("Client");
 
+	init_discord_rpc();
+}
+
+void gtamp::client::client::run()
+{
+	graphic_manager graphic_manager;
+
+	graphic_manager.init();
+}
+
+void gtamp::client::client::join_loop()
+{
 	while (true) {}
 }
 
-void gtamp::client::init_discord_rpc()
+void gtamp::client::client::setup_logger(std::shared_ptr<spdlog::sinks::basic_file_sink_mt> sink)
+{
+	log_manager::set_sink(sink);
+}
+
+void gtamp::client::client::init_discord_rpc()
 {
 	DiscordEventHandlers handlers = {0};
 	DiscordRichPresence discord_presence = {0};

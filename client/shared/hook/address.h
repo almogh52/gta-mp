@@ -15,6 +15,12 @@ namespace gtamp {
 				return (T *)_addr;
 			};
 
+			template <typename R, typename ...Args>
+			R call(Args... args)
+			{
+				return ((R(*)(Args...))_addr)(args...);
+			};
+
 		protected:
 			uintptr_t _addr;
 		};

@@ -11,10 +11,10 @@ set (CMAKE_CXX_STANDARD 17)
 add_definitions(-DGTAMPCORE_EXPORT)
 
 # Get all the cpp and h files for the launcher
-file(GLOB SOURCES "src/*.cpp" "src/*.h" "include/*.h")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h" "include/*.h")
 
-# Get all header files from the shared
-file(GLOB_RECURSE SHARED_SOURCES "../shared/*.h")
+# Get all source and header files from the shared
+file(GLOB_RECURSE SHARED_SOURCES "../shared/*.cpp" "../shared/*.h")
 
 # Change runtime library to MT
 set(CMAKE_CXX_FLAGS_RELEASE "/MT")

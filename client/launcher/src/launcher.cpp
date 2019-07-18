@@ -3,8 +3,6 @@
 #include <Windows.h>
 #include <thread>
 
-#include <client.h>
-
 #include "splash_screen.h"
 #include "patches.h"
 #include "../../shared/hook/manager.h"
@@ -15,6 +13,9 @@ LPCSTR __stdcall hook_GetCommandlineA()
 	// Apply post load patches to the binary
 	spdlog::get("Launcher")->info("Applying Post-Load patches..");
 	gtamp::launcher::patches::apply_post_load_patches();
+
+	// Run the client
+	gtamp::launcher::launcher::get_client().run();
 	gtamp::launcher::splash_screen::set_progress(100);
 
 	// Close the splash screen
@@ -55,7 +56,7 @@ FARPROC proc_handler(HMODULE module, const char *name)
 }
 
 gtamp::launcher::launcher::launcher()
-	: _logger(create_logger("Launcher")), _loader(proc_handler) {}
+	: _logger(log_manager::create_logger("Launcher")), _loader(proc_handler) {}
 
 void gtamp::launcher::launcher::run()
 {
@@ -63,10 +64,11 @@ void gtamp::launcher::launcher::run()
 	std::function<void()> entry;
 	std::thread gta_initial_thread;
 
-	client client;
-
 	// Show the splash screen
 	splash_screen::show();
+
+	// Share the logger sink with the core
+	_client.setup_logger(log_manager::get_sink());
 
 	// Flush log every second to file
 	spdlog::flush_every(std::chrono::seconds(1));
@@ -98,7 +100,7 @@ void gtamp::launcher::launcher::run()
 	gtamp::hook::manager::set_exe_memory(_loader.get_image_base());
 
 	// Create logger for the GTA
-	create_logger("GTA V");
+	log_manager::create_logger("GTA V");
 
 	// Create the initial thread for the GTA with it's entry and join it
 	_logger->info("Starting GTA's initial thread..");
@@ -107,5 +109,8 @@ void gtamp::launcher::launcher::run()
 	splash_screen::set_progress(50);
 
 	// Run the client core
-	client.run();
+	_client.init();
+
+	// Join the client's loop
+	_client.join_loop();
 }

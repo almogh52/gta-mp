@@ -8,6 +8,7 @@
 
 #include "../exception.h"
 
+#ifdef GTAMPCORE_EXPORT
 void gtamp::hook::manager::set_exe_memory(void *exe_memory)
 {
 	gtamp::hook::manager::exe_memory = exe_memory;
@@ -72,7 +73,7 @@ bool gtamp::hook::manager::install_hook(std::string hook_name, void *src, void *
 	success = hook->Install(src, dst, subhook::HookFlag64BitOffset);
 
 	// Add the hook to the map of hooks
-	_hooks[hook_name] = hook;
+	_hooks->insert({hook_name, hook});
 
 	return success;
 }
@@ -84,10 +85,10 @@ bool gtamp::hook::manager::remove_hook(std::string hook_name)
 	try
 	{
 		// Find the hook
-		hook = _hooks.find(hook_name)->second;
+		hook = _hooks->find(hook_name)->second;
 
 		// Remove the hook
-		_hooks.erase(hook_name);
+		_hooks->erase(hook_name);
 	}
 	catch (...)
 	{
@@ -104,7 +105,7 @@ gtamp::hook::address gtamp::hook::manager::get_trampoline(std::string hook_name)
 	try
 	{
 		// Find the hook
-		hook = _hooks.find(hook_name)->second;
+		hook = _hooks->find(hook_name)->second;
 	}
 	catch (...)
 	{
@@ -113,3 +114,4 @@ gtamp::hook::address gtamp::hook::manager::get_trampoline(std::string hook_name)
 
 	return address((uintptr_t)hook->GetTrampoline());
 }
+#endif
