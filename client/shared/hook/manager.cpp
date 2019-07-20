@@ -2,10 +2,6 @@
 
 #include <algorithm>
 
-#define NOMINMAX
-#include <windows.h>
-#undef NOMINMAX
-
 #include "../exception.h"
 
 #ifdef GTAMPCORE_EXPORT
@@ -76,6 +72,13 @@ bool gtamp::hook::manager::install_hook(std::string hook_name, void *src, void *
 	_hooks->insert({hook_name, hook});
 
 	return success;
+}
+
+bool gtamp::hook::manager::install_winapi_hook(std::string hook_name, HMODULE module, const char *proc_name, void *dst)
+{
+	void *addr = GetProcAddress(module, proc_name);
+
+	return install_hook(hook_name, addr, dst);
 }
 
 bool gtamp::hook::manager::remove_hook(std::string hook_name)

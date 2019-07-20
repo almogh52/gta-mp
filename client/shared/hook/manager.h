@@ -6,6 +6,10 @@
 #define CORE_EXPORT __declspec(dllimport)
 #endif
 
+#define NOMINMAX
+#include <windows.h>
+#undef NOMINMAX
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -29,12 +33,7 @@ public:
 	static std::vector<section> get_sections();
 
 	static bool install_hook(std::string hook_name, void *src, void *dst);
-
-	/*template <typename R, typename ...Args>
-	static bool install_hook(std::string hook_name, void *src, R(*dst)(Args...))
-	{
-		return install_hook(hook_name, src, (void *)dst);
-	};*/
+	static bool install_winapi_hook(std::string hook_name, HMODULE module, const char *proc_name, void *dst);
 
 	static bool remove_hook(std::string hook_name);
 	static address get_trampoline(std::string hook_name);
