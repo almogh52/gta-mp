@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <thread>
 
+#include <core.h>
+
 #include "splash_screen.h"
 #include "patches.h"
 #include "../../shared/hook/manager.h"
@@ -15,7 +17,7 @@ LPCSTR __stdcall hook_GetCommandlineA()
 	gtamp::launcher::patches::apply_post_load_patches();
 
 	// Call post launch event
-	gtamp::launcher::launcher::get_core().event_manager()->call(gtamp::core::event::POST_LAUNCH);
+	gtamp::core::core::get()->event_manager()->call(gtamp::core::event::POST_LAUNCH);;
 	gtamp::launcher::splash_screen::set_progress(100);
 
 	// Close the splash screen
@@ -71,7 +73,7 @@ void gtamp::launcher::launcher::run()
 	splash_screen::show();
 
 	// Share the logger sink with the core
-	_core.setup_logger(log_manager::get_sink());
+	gtamp::core::core::get()->setup_logger(log_manager::get_sink());
 
 	// Flush log every second to file
 	spdlog::flush_every(std::chrono::seconds(1));
@@ -112,8 +114,8 @@ void gtamp::launcher::launcher::run()
 	splash_screen::set_progress(50);
 
 	// Run the client core
-	_core.init();
+	gtamp::core::core::get()->init();
 
 	// Join the core's loop
-	_core.join_loop();
+	gtamp::core::core::get()->join_loop();
 }

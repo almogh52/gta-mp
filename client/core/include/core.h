@@ -1,5 +1,7 @@
 #pragma once
 
+#include "singleton.h"
+
 #ifdef GTAMPCORE_EXPORT
 #define CORE_EXPORT __declspec(dllexport)
 #else
@@ -19,7 +21,7 @@ namespace gtamp
 {
 namespace core
 {
-class CORE_EXPORT core
+class CORE_EXPORT core : public singleton<core>
 {
 public:
 	core();
