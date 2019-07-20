@@ -38,6 +38,7 @@ add_subdirectory(../../vendor/spdlog spdlog)
 include_directories(../../vendor/spdlog/include)
 
 # Bundle the CEF as well
+set(CEF_CXX_COMPILER_FLAGS_DEBUG "/MT")
 get_filename_component(CEF_ROOT "../vendor/cef" ABSOLUTE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")
 include_directories(${CEF_ROOT})
