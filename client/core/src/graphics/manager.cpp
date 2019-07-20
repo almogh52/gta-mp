@@ -1,11 +1,15 @@
-#include "graphic_manager.h"
+#include "manager.h"
 
 #include <windows.h>
+
+#include "../../include/core.h"
 
 #include "../../../shared/hook/manager.h"
 #include "../../../shared/hook/pattern.h"
 
-void gtamp::client::graphic_manager::init()
+gtamp::core::graphics::manager::manager(core *core) : manager_interface("Graphics", core) {}
+
+void gtamp::core::graphics::manager::init()
 {
 	// Install a hook for the present function of DirectX11
 	hook::manager::install_hook("DirectX11Present",

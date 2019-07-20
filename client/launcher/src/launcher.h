@@ -1,6 +1,6 @@
 #pragma once
 
-#include <client.h>
+#include <core.h>
 
 #include "pe_loader.h"
 #include "../../shared/logger.h"
@@ -16,13 +16,13 @@ public:
 
 	void run();
 
-	static client::client& get_client()
+	static core::core& get_core()
 	{
-		return _client;
+		return _core;
 	};
 
 private:
-	inline static client::client _client;
+	inline static core::core _core;
 
 	std::shared_ptr<spdlog::logger> _logger;
 

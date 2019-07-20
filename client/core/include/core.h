@@ -6,26 +6,40 @@
 #define CORE_EXPORT __declspec(dllimport)
 #endif
 
+#include <string>
 #include <memory>
+#include <unordered_map>
+
+#include "../src/manager_interface.h"
+#include "../src/graphics/manager.h"
 
 #include "../../shared/logger.h"
 
 namespace gtamp
 {
-namespace client
+namespace core
 {
-class CORE_EXPORT client
+class CORE_EXPORT core
 {
 public:
+	core();
+	~core();
+
 	void init();
 	void run();
 	void join_loop();
 
 	void setup_logger(std::shared_ptr<spdlog::sinks::basic_file_sink_mt> sink);
 
+	std::unordered_map<std::string, std::shared_ptr<manager_interface>> &managers();
+	std::shared_ptr<graphics::manager> graphics_manager();
+
 private:
 	inline static const char *DISCORD_APP_ID = "600342853511544843";
 
+	class impl; impl *pimpl;
+
+	void init_managers();
 	void init_discord_rpc();
 };
 }; // namespace client

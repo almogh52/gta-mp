@@ -14,8 +14,8 @@ LPCSTR __stdcall hook_GetCommandlineA()
 	spdlog::get("Launcher")->info("Applying Post-Load patches..");
 	gtamp::launcher::patches::apply_post_load_patches();
 
-	// Run the client
-	gtamp::launcher::launcher::get_client().run();
+	// Run the core
+	gtamp::launcher::launcher::get_core().run();
 	gtamp::launcher::splash_screen::set_progress(100);
 
 	// Close the splash screen
@@ -68,7 +68,7 @@ void gtamp::launcher::launcher::run()
 	splash_screen::show();
 
 	// Share the logger sink with the core
-	_client.setup_logger(log_manager::get_sink());
+	_core.setup_logger(log_manager::get_sink());
 
 	// Flush log every second to file
 	spdlog::flush_every(std::chrono::seconds(1));
@@ -109,8 +109,8 @@ void gtamp::launcher::launcher::run()
 	splash_screen::set_progress(50);
 
 	// Run the client core
-	_client.init();
+	_core.init();
 
-	// Join the client's loop
-	_client.join_loop();
+	// Join the core's loop
+	_core.join_loop();
 }
