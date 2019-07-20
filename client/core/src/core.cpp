@@ -5,7 +5,10 @@
 class gtamp::core::core::core::impl
 {
 public:
+	impl() : event_manager(new gtamp::core::event_manager) {}
+
 	std::unordered_map<std::string, std::shared_ptr<manager_interface>> managers;
+	std::shared_ptr<gtamp::core::event_manager> event_manager;
 };
 
 gtamp::core::core::core() : pimpl(new impl) {}
@@ -17,15 +20,16 @@ void gtamp::core::core::init()
 	// Init client logger
 	log_manager::create_logger("Core");
 
-	// Init discord RPC
-	init_discord_rpc();
-}
+	// Init event manager
+	event_manager()->init();
 
-void gtamp::core::core::run()
-{
 	// Init managers
 	spdlog::get("Core")->info("Initializing managers..");
 	init_managers();
+
+	// Init discord RPC
+	spdlog::get("Core")->info("Initializing Discord RPC..");
+	init_discord_rpc();
 }
 
 void gtamp::core::core::join_loop()
@@ -33,6 +37,11 @@ void gtamp::core::core::join_loop()
 	while (true)
 	{
 	}
+}
+
+std::shared_ptr<gtamp::core::event_manager> gtamp::core::core::event_manager()
+{
+	return pimpl->event_manager;
 }
 
 std::unordered_map<std::string, std::shared_ptr<gtamp::core::manager_interface>> &gtamp::core::core::managers()

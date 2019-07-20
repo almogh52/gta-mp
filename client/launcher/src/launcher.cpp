@@ -14,8 +14,8 @@ LPCSTR __stdcall hook_GetCommandlineA()
 	spdlog::get("Launcher")->info("Applying Post-Load patches..");
 	gtamp::launcher::patches::apply_post_load_patches();
 
-	// Run the core
-	gtamp::launcher::launcher::get_core().run();
+	// Call post launch event
+	gtamp::launcher::launcher::get_core().event_manager()->call(gtamp::core::event::POST_LAUNCH);
 	gtamp::launcher::splash_screen::set_progress(100);
 
 	// Close the splash screen

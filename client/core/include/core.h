@@ -10,9 +10,9 @@
 #include <memory>
 #include <unordered_map>
 
+#include "event_manager.h"
 #include "../src/manager_interface.h"
 #include "../src/graphics/manager.h"
-
 #include "../../shared/logger.h"
 
 namespace gtamp
@@ -26,10 +26,11 @@ public:
 	~core();
 
 	void init();
-	void run();
 	void join_loop();
 
 	void setup_logger(std::shared_ptr<spdlog::sinks::basic_file_sink_mt> sink);
+
+	std::shared_ptr<event_manager> event_manager();
 
 	std::unordered_map<std::string, std::shared_ptr<manager_interface>> &managers();
 	std::shared_ptr<graphics::manager> graphics_manager();
