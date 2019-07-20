@@ -13,7 +13,7 @@ cd build
 cmake -DCMAKE_GENERATOR_PLATFORM=x64 ..
 
 :: Build the solution
-msbuild GTAMPClient.sln
+msbuild GTAMPClient.sln /p:Configuration=Release
 
 :: Return to launcher folder
 cd ..

@@ -304,6 +304,10 @@ void gtamp::pe_loader::init_tls()
 	const IMAGE_TLS_DIRECTORY *target_tls = (PIMAGE_TLS_DIRECTORY)((char *)source_dos_header + source_nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_TLS].VirtualAddress);
 	const IMAGE_TLS_DIRECTORY *source_tls = (PIMAGE_TLS_DIRECTORY)(_nt_headers->OptionalHeader.ImageBase + directory->VirtualAddress);
 
+	// Remove protection on TLS
+	DWORD old_protect;
+	VirtualProtect((void *)target_tls->StartAddressOfRawData, target_tls->EndAddressOfRawData - target_tls->StartAddressOfRawData, PAGE_READWRITE, &old_protect);
+
 	// Copy the TLS callbacks to the target TLS callbacks (this application)
 	memcpy((void *)target_tls->StartAddressOfRawData, reinterpret_cast<void *>(source_tls->StartAddressOfRawData), source_tls->EndAddressOfRawData - source_tls->StartAddressOfRawData);
 
