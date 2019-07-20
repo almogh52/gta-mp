@@ -16,7 +16,6 @@ void gtamp::core::graphics::manager::init()
 		hook::manager::install_hook("DirectX11Present",
 									(uint8_t *)hook::pattern("E9 ? ? ? ? 40 55 53 56 57 41 54 41 56") + 5,
 									+[](UINT SyncInterval, UINT Flags) -> HRESULT {
-										spdlog::get("Graphics")->info("Trying");
 										return hook::manager::get_trampoline("DirectX11Present").call<HRESULT, UINT, UINT>(SyncInterval, Flags);
 									});
 	});
