@@ -32,8 +32,11 @@ BOOL __stdcall hook_ShowWindow(HWND hWnd, int nCmdShow)
 	return ShowWindow(hWnd, nCmdShow);
 }
 
-void __stdcall hook_OutputDebugString(const char *str)
+void __stdcall hook_OutputDebugString(char *str)
 {
+	// Remove new line
+	str[strlen(str) - 1] = 0;
+
 	spdlog::get("GTA V")->info("GTA V Debug: {}", str);
 }
 
