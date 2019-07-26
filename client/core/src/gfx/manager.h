@@ -8,7 +8,7 @@ namespace gtamp
 {
 namespace core
 {
-namespace graphics
+namespace gfx
 {
 class manager : public manager_interface
 {
@@ -17,13 +17,13 @@ public:
 
 	virtual void init();
 
-	std::shared_ptr<gtamp::core::graphics::directx> directx()
+	std::shared_ptr<gtamp::core::gfx::directx> directx()
 	{
 		return _directx;
 	};
 
 private:
-	std::shared_ptr<gtamp::core::graphics::directx> _directx;
+	std::shared_ptr<gtamp::core::gfx::directx> _directx;
 };
 }; // namespace graphics
 }; // namespace core

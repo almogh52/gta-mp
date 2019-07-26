@@ -49,9 +49,9 @@ std::unordered_map<std::string, std::shared_ptr<gtamp::core::manager_interface>>
 	return pimpl->managers;
 }
 
-std::shared_ptr<gtamp::core::graphics::manager> gtamp::core::core::graphics_manager()
+std::shared_ptr<gtamp::core::gfx::manager> gtamp::core::core::graphics_manager()
 {
-	return std::dynamic_pointer_cast<graphics::manager>(managers()["Graphics"]);
+	return std::dynamic_pointer_cast<gfx::manager>(managers()["Graphics"]);
 }
 
 void gtamp::core::core::setup_logger(std::shared_ptr<spdlog::sinks::basic_file_sink_mt> sink)
@@ -82,7 +82,7 @@ void gtamp::core::core::init_discord_rpc()
 void gtamp::core::core::init_managers()
 {
 	// Alloc managers
-	managers()["Graphics"] = std::make_shared<graphics::manager>(this);
+	managers()["Graphics"] = std::make_shared<gfx::manager>(this);
 
 	// For each manager, init it
 	for (auto manager : managers())

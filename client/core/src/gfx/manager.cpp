@@ -5,9 +5,9 @@
 #include "../../../shared/hook/manager.h"
 #include "../../../shared/hook/pattern.h"
 
-gtamp::core::graphics::manager::manager(core *core) : manager_interface("Graphics", core), _directx(new gtamp::core::graphics::directx) {}
+gtamp::core::gfx::manager::manager(core *core) : manager_interface("Graphics", core), _directx(new gtamp::core::gfx::directx) {}
 
-void gtamp::core::graphics::manager::init()
+void gtamp::core::gfx::manager::init()
 {
 	// Init the DirectX handler
 	_directx->init();

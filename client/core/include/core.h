@@ -14,7 +14,7 @@
 
 #include "event_manager.h"
 #include "../src/manager_interface.h"
-#include "../src/graphics/manager.h"
+#include "../src/gfx/manager.h"
 #include "../../shared/logger.h"
 
 namespace gtamp
@@ -35,7 +35,7 @@ public:
 	std::shared_ptr<event_manager> event_manager();
 
 	std::unordered_map<std::string, std::shared_ptr<manager_interface>> &managers();
-	std::shared_ptr<graphics::manager> graphics_manager();
+	std::shared_ptr<gfx::manager> graphics_manager();
 
 private:
 	inline static const char *DISCORD_APP_ID = "600342853511544843";

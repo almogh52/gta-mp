@@ -7,7 +7,7 @@ namespace gtamp
 {
 namespace core
 {
-namespace graphics
+namespace gfx
 {
 class directx
 {

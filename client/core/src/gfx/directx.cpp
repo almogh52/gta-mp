@@ -5,7 +5,7 @@
 #include "../../include/core.h"
 #include "../../../shared/hook/manager.h"
 
-void gtamp::core::graphics::directx::init()
+void gtamp::core::gfx::directx::init()
 {
 	HMODULE directx = LoadLibraryA("d3d11.dll");
 
