@@ -15,10 +15,12 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <sstream>
 #include <subhook.h>
 
 #include "section.h"
 #include "address.h"
+#include "../logger.h"
 
 namespace gtamp
 {
@@ -35,6 +37,61 @@ public:
 	static bool install_hook(std::string hook_name, void *src, void *dst);
 	static bool install_winapi_hook(std::string hook_name, HMODULE module, const char *proc_name, void *dst);
 	static std::shared_ptr<subhook::Hook> get_hook_ptr(std::string hook_name);
+
+	template <int hook_idx, typename R, typename... Args>
+	static typename std::enable_if<!std::is_same<R, void>::value, bool>::type install_logger_hook(void *src)
+	{
+		log_manager::create_logger("Function Logger");
+
+		return install_hook(std::to_string(hook_idx), src, +[](Args... args) -> R {
+			subhook::ScopedHookRemove h(get_hook_ptr(std::to_string(hook_idx)).get());
+
+			size_t args_size = sizeof...(args);
+			std::string format;
+
+			// Function used to multiply a string
+			auto string_multiply = [](std::string str, int n) -> std::string {
+				std::stringstream out;
+				while (n--)
+					out << str;
+				return out.str();
+			};
+
+			// Call the original function and get the return value
+			R ret_value = ((R(*)(Args...))get_hook_ptr(std::to_string(hook_idx))->GetSrc())(args...);
+
+			// Print the params and the return value
+			format = "FUNCTION {} PARAMS: " + string_multiply("{} ", args_size) + "RETURN: {}";
+			spdlog::get("Function Logger")->info(format, hook_idx, args..., ret_value);
+
+			return ret_value;
+		});
+	}
+
+	template <int hook_idx, typename R, typename... Args>
+	static typename std::enable_if<std::is_same<R, void>::value, bool>::type install_logger_hook(void *src)
+	{
+		log_manager::create_logger("Function Logger");
+
+		return install_hook(std::to_string(hook_idx), src, +[](Args... args) {
+			subhook::ScopedHookRemove h(get_hook_ptr(std::to_string(hook_idx)).get());
+
+			size_t args_size = sizeof...(args);
+			std::string format;
+
+			auto string_multiply = [](std::string str, int n) -> std::string {
+				std::stringstream out;
+				while (n--)
+					out << str;
+				return out.str();
+			};
+
+			format = "FUNCTION {} PARAMS: " + string_multiply("{} ", args_size);
+			spdlog::get("Function Logger")->info(format, hook_idx, args...);
+
+			((void(*)(Args...))get_hook_ptr(std::to_string(hook_idx))->GetSrc())(args...);
+		});
+	}
 
 	static bool remove_hook(std::string hook_name);
 	static address get_trampoline(std::string hook_name);
