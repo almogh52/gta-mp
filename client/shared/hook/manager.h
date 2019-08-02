@@ -34,6 +34,7 @@ public:
 
 	static bool install_hook(std::string hook_name, void *src, void *dst);
 	static bool install_winapi_hook(std::string hook_name, HMODULE module, const char *proc_name, void *dst);
+	static std::shared_ptr<subhook::Hook> get_hook_ptr(std::string hook_name);
 
 	static bool remove_hook(std::string hook_name);
 	static address get_trampoline(std::string hook_name);

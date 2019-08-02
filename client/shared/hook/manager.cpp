@@ -81,6 +81,18 @@ bool gtamp::hook::manager::install_winapi_hook(std::string hook_name, HMODULE mo
 	return install_hook(hook_name, addr, dst);
 }
 
+std::shared_ptr<subhook::Hook> gtamp::hook::manager::get_hook_ptr(std::string hook_name)
+{
+	try
+	{
+		return _hooks->find(hook_name)->second;
+	}
+	catch (...)
+	{
+		throw exception(HOOK_NOT_FOUND, "The hook " + hook_name + " wasn't found");
+	}
+}
+
 bool gtamp::hook::manager::remove_hook(std::string hook_name)
 {
 	std::shared_ptr<subhook::Hook> hook;
