@@ -41,7 +41,9 @@ public:
 	template <int hook_idx, typename R, typename... Args>
 	static typename std::enable_if<!std::is_same<R, void>::value, bool>::type install_logger_hook(void *src)
 	{
-		log_manager::create_logger("Function Logger");
+		// If no function logger yet
+		if (!spdlog::get("Function Logger"))
+			log_manager::create_logger("Function Logger");
 
 		return install_hook(std::to_string(hook_idx), src, +[](Args... args) -> R {
 			subhook::ScopedHookRemove h(get_hook_ptr(std::to_string(hook_idx)).get());
@@ -61,7 +63,7 @@ public:
 			R ret_value = ((R(*)(Args...))get_hook_ptr(std::to_string(hook_idx))->GetSrc())(args...);
 
 			// Print the params and the return value
-			format = "FUNCTION {} PARAMS: " + string_multiply("{} ", args_size) + "RETURN: {}";
+			format = "FUNCTION {} " + (args_size ? "PARAMS: " + string_multiply("{} ", args_size) : "") + "RETURN: {}";
 			spdlog::get("Function Logger")->info(format, hook_idx, args..., ret_value);
 
 			return ret_value;
@@ -71,7 +73,9 @@ public:
 	template <int hook_idx, typename R, typename... Args>
 	static typename std::enable_if<std::is_same<R, void>::value, bool>::type install_logger_hook(void *src)
 	{
-		log_manager::create_logger("Function Logger");
+		// If no function logger yet
+		if (!spdlog::get("Function Logger"))
+			log_manager::create_logger("Function Logger");
 
 		return install_hook(std::to_string(hook_idx), src, +[](Args... args) {
 			subhook::ScopedHookRemove h(get_hook_ptr(std::to_string(hook_idx)).get());
@@ -86,10 +90,12 @@ public:
 				return out.str();
 			};
 
-			format = "FUNCTION {} PARAMS: " + string_multiply("{} ", args_size);
+			// Print params
+			format = "FUNCTION {} " + (args_size ? "PARAMS: " + string_multiply("{} ", args_size) : "");
 			spdlog::get("Function Logger")->info(format, hook_idx, args...);
 
-			((void(*)(Args...))get_hook_ptr(std::to_string(hook_idx))->GetSrc())(args...);
+			// Call the original function
+			((void (*)(Args...))get_hook_ptr(std::to_string(hook_idx))->GetSrc())(args...);
 		});
 	}
 
